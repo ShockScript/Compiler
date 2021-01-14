@@ -1,0 +1,10 @@
+package ds.global {
+    final class Observable {
+        native function Observable(value:*);
+        native function get value():*;
+        native function set value(value);
+        native function addListener(fn:Function):void;
+        native function removeListener(fn:Function):void;
+        native function dispatchUpdate():void;
+    }
+}

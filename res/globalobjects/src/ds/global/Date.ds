@@ -1,0 +1,105 @@
+package ds.global {
+    final class Date {
+        static native function parse(date:String):Number;
+        static native function UTC(year:Number, month:Number, date:Number = 1, hour:Number = 0, minute:Number = 0, second:Number = 0, millisecond:Number = 0):Number;
+
+        native function Date(yearOrTimevalue:Number = NaN, month:Number = NaN, date:Number = NaN, hour:Number = NaN, minute:Number = NaN, second:Number = NaN, millisecond:Number = NaN);
+
+        native Proxy static function apply(arguments:Array):String;
+
+        function get date():Number getDate();
+        function set date(value) { setDate(value) }
+
+        function get dateUTC():Number getUTCDate();
+        function set dateUTC(value) { setUTCDate(value) }
+
+        function get day():Number getDay();
+        function get dayUTC():Number getUTCDay();
+
+        function get fullYear():Number getFullYear();
+        function set fullYear(value) { setFullYear(value, 0, 0) }
+
+        function get fullYearUTC():Number getUTCFullYear();
+        function set fullYearUTC(value) { setUTCFullYear(value, 0, 0) }
+
+        function get hours():Number getHours();
+        function set hours(value) { setHours(value, 0, 0, 0) }
+
+        function get hoursUTC():Number getUTCHours();
+        function set hoursUTC(value) { setUTCHours(value, 0, 0, 0) }
+
+        function get milliseconds():Number getMilliseconds();
+        function set milliseconds(value) { setMilliseconds(value) }
+
+        function get millisecondsUTC():Number getUTCMilliseconds();
+        function set millisecondsUTC(value) { setUTCMilliseconds(value) }
+
+        function get minutes():Number getUTCMinutes();
+        function set minutes(value) { setUTCMinutes(value, 0, 0) }
+
+        function get minutesUTC():Number getUTCMinutes();
+        function set minutesUTC(value) { setUTCMinutes(value, 0, 0) }
+
+        function get month():Number getMonth();
+        function set month(value) { setMonth(value, 0) }
+
+        function get monthUTC():Number getUTCMonth();
+        function set monthUTC(value) { setUTCMonth(value, 0) }
+
+        function get seconds():Number getSeconds();
+        function set seconds(value) { setSeconds(value, 0) }
+
+        function get secondsUTC():Number getUTCSeconds();
+        function set secondsUTC(value) { setUTCSeconds(value, 0) }
+
+        function get time():Number getTime();
+        function set time(value) { setTime(value) }
+
+        function get timezoneOffset():Number getTimezoneOffset();
+
+        native function getDate():Number;
+        native function getDay():Number;
+        native function getFullYear():Number;
+        native function getHours():Number;
+        native function getMilliseconds():Number;
+        native function getMinutes():Number;
+        native function getMonth():Number;
+        native function getSeconds():Number;
+        native function getTime():Number;
+        native function getTimezoneOffset():Number;
+        native function getUTCDate():Number;
+        native function getUTCDay():Number;
+        native function getUTCFullYear():Number;
+        native function getUTCHours():Number;
+        native function getUTCMilliseconds():Number;
+        native function getUTCMinutes():Number;
+        native function getUTCMonth():Number;
+        native function getUTCSeconds():Number;
+
+        native function setDate(day:Number):Number;
+        native function setFullYear(year:Number, month:Number = NaN, date:Number = NaN):Number;
+        native function setHours(hour:Number, minute:Number = NaN, second:Number = NaN, millisecond:Number = NaN):Number;
+        native function setMilliseconds(millisecond:Number):Number;
+        native function setMinutes(minute:Number, second:Number = NaN, millisecond:Number = NaN):Number;
+        native function setMonth(month:Number, date:Number = NaN):Number;
+        native function setSeconds(second:Number, millisecond:Number = NaN):Number;
+        native function setTime(millisecond:Number):Number;
+        native function setUTCDate(day:Number):Number;
+        native function setUTCFullYear(year:Number, month:Number = NaN, date:Number = NaN):Number;
+        native function setUTCHours(hour:Number, minute:Number = NaN, second:Number = NaN, millisecond:Number = NaN):Number;
+        native function setUTCMilliseconds(millisecond:Number):Number;
+        native function setUTCMinutes(minute:Number, second:Number = NaN, millisecond:Number = NaN):Number;
+        native function setUTCMonth(month:Number, date:Number = NaN):Number;
+        native function setUTCSeconds(second:Number, millisecond:Number = NaN):Number;
+
+        override native function toLocaleString():String;
+        override native function toString():String;
+        native function toDateString():String;
+        native function toLocaleDateString():String;
+        native function toLocaleTimeString():String;
+        native function toTimeString():String;
+        native function toUTCString():String;
+
+        override native function valueOf():Number;
+    }
+}

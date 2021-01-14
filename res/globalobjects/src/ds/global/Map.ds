@@ -1,0 +1,24 @@
+package ds.global {
+    class Map {
+        native function Map(weakKeys:Boolean = false);
+
+        native function get length():Number;
+        native function get isEmpty():Boolean;
+        native function clear():void;
+
+        function assign(map:Map):void {
+            for each (const [k, v] in map) this.set(k, v);
+        }
+
+        native function get(key:*):*;
+        native function set(key:*, value:*):void;
+        native function remove(key:*):Boolean;
+        function has(key:*):Boolean key in this;
+
+        native Proxy function hasProperty(key:*):Boolean;
+
+        native Proxy function nextNameIndex(index:Number):Number;
+        native Proxy function nextName(index:Number):*;
+        native Proxy function nextValue(index:Number):[*, *];
+    }
+}

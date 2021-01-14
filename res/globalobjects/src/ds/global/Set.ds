@@ -1,0 +1,26 @@
+package ds.global {
+    class Set {
+        private const _dict:Map;
+
+        function Set(weakValues:Boolean = false) {
+            _dict = new Map(weakValues);
+        }
+
+        function set(value:*):void {
+            _dict.set(value, true);
+        }
+
+        function remove(value:*):Boolean
+            _dict.remove(value);
+
+        function has(value:*):Boolean value in this;
+
+        function get length():Number _dict.length;
+
+        Proxy function hasProperty(key:*):Boolean
+            !!_dict.get(key);
+
+        Proxy function nextNameIndex(index:Number):Number _dict.Proxy::nextNameIndex(index);
+        Proxy function nextValue(index:Number):* _dict.Proxy::nextName(index);
+    }
+}

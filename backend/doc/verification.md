@@ -4,7 +4,7 @@ The result for verifying nodes is assigned to `[object Verifier].result`. The sy
 
 ### Enums
 
-Every constant definition fills VariableSlot.enumPairAssociation with (`String`,  `AnyRangeNumber`).
+Every constant definition fills `[object VariableSlot].enumPairAssociation` with (`String`,  `AnyRangeNumber`).
 
 ### Destructuring patterns
 

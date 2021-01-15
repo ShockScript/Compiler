@@ -4,7 +4,7 @@
 
 _CURRENT GOALS:_
 
-- [ ] JavaScript target
+- [ ] WebAssembly target
 - [ ] Global Objects
 - [ ] Object Reference Generator
 - [ ] Runtime

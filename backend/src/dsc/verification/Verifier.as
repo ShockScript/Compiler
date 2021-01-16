@@ -2181,8 +2181,8 @@ package dsc.verification {
                 argument:Symbol;
 
             if (exp.type == Operator.AWAIT) {
-                var asyncResultType:Symbol = _openedFunction.methodSlot ? _openedFunction.methodSlot.methodSignature.result.arguments[0] : semanticContext.statics.anyType;
-                limitType(exp.argument, asyncResultType);
+                var promiseType:Symbol = _openedFunction.methodSlot ? _openedFunction.methodSlot.methodSignature.result : semanticContext.statics.promiseAnyType;
+                limitType(exp.argument, promiseType.arguments[0]);
             }
             else if (exp.type == Operator.YIELD)
                 verifyExpression(exp.argument),
@@ -2558,8 +2558,11 @@ package dsc.verification {
 
                 if (common.flags & FunctionFlags.YIELD)
                     fnResult = semanticContext.statics.generatorType;
-                else if (common.flags & FunctionFlags.AWAIT && !fnResult.equalsOrInstantiationOf(semanticContext.statics.promiseType))
-                    fnResult = semanticContext.factory.instantiatedType(semanticContext.statics.promiseType, [fnResult]);
+                else if (common.flags & FunctionFlags.AWAIT) {
+                    fnResult = fnResult.escapeType();
+                    if (!fnResult.equalsOrInstantiationOf(semanticContext.statics.promiseType))
+                        fnResult = semanticContext.factory.instantiatedType(semanticContext.statics.promiseType, [fnResult]);
+                }
 
                 r = semanticContext.factory.methodSignature(params, optParams, hasRest, fnResult);
             }

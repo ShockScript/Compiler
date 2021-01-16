@@ -5,7 +5,7 @@ package dsc.parsing.ast {
     /**
      * Unary operation.
      *
-     * <p>Verification of <code>await</code> operation consists of a surrounding activation A. If A is attached a method, the <code>await</code> operand is limited to <code>A.methodSlot.arguments[0]</code>; otherwise the <code>await</code> operand is of the type &#x2a.</p>
+     * <p>Verification of <code>await</code> operation consists of a surrounding activation A. If A is attached a method, the <code>await</code> operand is limited to <code>A.methodSlot.result</code>; otherwise the <code>await</code> operand is limited to Promise.&lt;&#x2a&gt;. The <code>await</code> will return value of the type argument of the Promise type.</p>
      *
      * <p><i>Special semantics</i>: if the operator is + and <code>argument</code> is an Observable typed variable, the result is
      * the given single argument, not Observable.value.</p>

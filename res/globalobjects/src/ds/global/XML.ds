@@ -25,6 +25,8 @@ package ds.global {
     }
 
     final class XML {
+        native function filter(fn:Function):XMLList;
+
         native Proxy function getProperty(name:*):*;
         native Proxy function setProperty(name:*, value:*):void;
         native Proxy function deleteProperty(name:*):Boolean;
@@ -34,7 +36,6 @@ package ds.global {
         native Proxy function deleteAttribute(name:*):Boolean;
 
         native Proxy function getDescendants(name:QName):XMLList;
-        native Proxy function filter(fn:Function):XMLList;
 
         override native function toString():String;
     }

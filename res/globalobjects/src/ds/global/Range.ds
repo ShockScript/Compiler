@@ -7,7 +7,7 @@ package ds.global {
         const start:*;
         const end:*;
         const step:*;
-        private const _endIsLess:Boolean;
+        private const _decrease:Boolean;
 
         function get from():* start;
         function get to():* end;
@@ -21,12 +21,7 @@ package ds.global {
                 this.step = this.start <= this.end ? type(1) : type(-1);
             else this.step = type(step);
 
-            if (this.end > this.start) {
-                var k = this.start;
-                this.start = this.end;
-                this.end = k;
-            }
-            _endIsLess = this.end < this.start;
+            _decrease = this.step < type(0);
         }
 
         Proxy static function apply([ start, end, step ]:Array):Range {
@@ -40,6 +35,6 @@ package ds.global {
         }
 
         Proxy function hasProperty(value:*):Boolean
-            _endIsLess ? value <= start && value > end : value >= start && value < end;
+            _decrease ? value <= start && value > end : value >= start && value < end;
     }
 }

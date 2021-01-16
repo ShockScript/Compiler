@@ -2182,7 +2182,8 @@ package dsc.verification {
 
             if (exp.type == Operator.AWAIT) {
                 var promiseType:Symbol = _openedFunction.methodSlot ? _openedFunction.methodSlot.methodSignature.result : semanticContext.statics.promiseAnyType;
-                limitType(exp.argument, promiseType.arguments[0]);
+                limitType(exp.argument, promiseType);
+                r = semanticContext.factory.value(promiseType.arguments[0]);
             }
             else if (exp.type == Operator.YIELD)
                 verifyExpression(exp.argument),

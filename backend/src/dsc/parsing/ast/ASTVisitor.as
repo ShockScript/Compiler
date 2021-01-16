@@ -81,7 +81,6 @@ package dsc.parsing.ast {
                 desc:DescendantsNode,
                 dot:DotNode,
                 exprId:ExpressionIdNode,
-                filter:FilterNode,
                 fnExpr:FunctionExpressionNode,
                 listExpr:ListExpressionNode,
                 newOp:NewOperatorNode,
@@ -119,7 +118,6 @@ package dsc.parsing.ast {
                 if (exprId.qualifier) this.visit(exprId.qualifier);
                 this.visit(exprId.key);
             }
-            else if (filter = node as FilterNode) this.visit(filter.base), this.visit(filter.predicate);
             else if (fnExpr = node as FunctionExpressionNode) this.visit(fnExpr.common);
             else if (listExpr = node as ListExpressionNode)
                 for each (expr in listExpr.expressions) this.visit(expr);

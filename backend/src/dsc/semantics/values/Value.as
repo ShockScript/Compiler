@@ -196,13 +196,6 @@ package dsc.semantics.values {
 			return conv;
 		}
 
-        override public function testFilterSupport():Symbol {
-            if (_type == ownerContext.statics.anyType)
-                return ownerContext.factory.filter(this, null, null);
-        	var proxy:Symbol = _type.delegate ? _type.delegate.findFilterProxyInTree() : null;
-            return proxy ? ownerContext.factory.filter(this, proxy, undefined) : null;
-        }
-
         override public function testDescendantsSupport():Symbol {
             if (_type == ownerContext.statics.anyType)
                 return ownerContext.factory.descendants(this, null);

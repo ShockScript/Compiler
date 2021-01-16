@@ -218,13 +218,6 @@ package dsc.semantics {
         public function set attributeProxy(proxy:PropertyProxy):void {
         }
 
-        public function get filterProxy():Symbol {
-            return null;
-        }
-
-        public function set filterProxy(proxy:Symbol):void {
-        }
-
         public function get applyProxy():Symbol {
             return null;
         }
@@ -316,10 +309,6 @@ package dsc.semantics {
         }
 
         public function findAttributeProxyInTree():PropertyProxy {
-            return null;
-        }
-
-        public function findFilterProxyInTree():Symbol {
             return null;
         }
 
@@ -538,10 +527,6 @@ package dsc.semantics {
         }
 
         public function get ofMethodSlot():Symbol {
-            return null;
-        }
-
-        public function testFilterSupport():Symbol {
             return null;
         }
 

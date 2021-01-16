@@ -253,13 +253,6 @@ package dsc.semantics {
             return r;
         }
 
-        public function filter(object:Symbol, proxyMethod:Symbol, activation:Symbol):Symbol {
-            var r:Symbol = new Filter(object, proxyMethod, activation);
-            r.valueType ||= _context.statics.anyType;
-            r._context = _context;
-            return r;
-        }
-
         public function descendants(object:Symbol, proxyMethod:Symbol):Symbol {
             var r:Symbol = new Descendants(object, proxyMethod);
             r.valueType ||= _context.statics.anyType;

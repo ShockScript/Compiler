@@ -58,7 +58,6 @@
   - [x] PropertyProxyReferenceValue
   - [x] AttributeProxyReferenceValue
   - [x] TupleElement
-  - [x] Filter
   - [x] Descendants
   - [x] IncompatibleOperandsLogic (special result of logical and/or)
   - [x] ConversionValue (byAsOperator?)
@@ -147,7 +146,6 @@
   - [x] BooleanLiteralNode
   - [x] DescendantsNode
   - [x] EmbedExpressionNode
-  - [x] FilterNode
   - [x] FunctionExpressionNode
   - [x] ListExpressionNode
   - [x] NewOperatorNode

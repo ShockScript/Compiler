@@ -6,7 +6,6 @@ package dsc.semantics {
         private var _inheritsDelegate:Delegate;
         private var _propertyProxy:PropertyProxy;
         private var _attributeProxy:PropertyProxy;
-        private var _filterProxy:Symbol;
         private var _operators:Dictionary;
 
         /**
@@ -39,14 +38,6 @@ package dsc.semantics {
 
         override public function set attributeProxy(proxy:PropertyProxy):void {
             _attributeProxy = proxy;
-        }
-
-        override public function get filterProxy():Symbol {
-            return _filterProxy;
-        }
-
-        override public function set filterProxy(proxy:Symbol):void {
-            _filterProxy = proxy;
         }
 
         override public function get operators():Dictionary {
@@ -88,10 +79,6 @@ package dsc.semantics {
 
         override public function findAttributeProxyInTree():PropertyProxy {
             return attributeProxy || (inheritsDelegate ? inheritsDelegate.findAttributeProxyInTree() : null);
-        }
-
-        override public function findFilterProxyInTree():Symbol {
-            return filterProxy || (inheritsDelegate ? inheritsDelegate.findFilterProxyInTree() : null);
         }
 
         override public function findOperatorInTree(operator:Operator):Symbol {

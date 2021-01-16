@@ -1288,11 +1288,6 @@ package dsc.verification {
                             propertyProxy.deleteMethod = fn;
                     }
                 }
-                // Proxy::filter(fn:Function):V
-                else if (name == semanticContext.statics.proxyFilter) {
-                    if (!( !signature.params || signature.params.length != 1 || signature.optParams || signature.hasRest ))
-                        enclosingType.delegate.filterProxy = fn;
-                }
             }
         }
 
@@ -1784,8 +1779,6 @@ package dsc.verification {
                 r = verifyTypeArguments(TypeArgumentsNode(expression));
             else if (expression is BracketsNode)
                 r = verifyBracketsOperator(BracketsNode(expression));
-            else if (expression is FilterNode)
-                r = verifyFilterOperator(FilterNode(expression));
             else if (expression is DescendantsNode)
                 r = verifyDescendantsOperator(DescendantsNode(expression));
             else if (expression is UnaryOperatorNode)
@@ -2132,33 +2125,6 @@ package dsc.verification {
             else verifyExpression(exp.key);
 
             return r;
-        }
-
-        private function verifyFilterOperator(exp:FilterNode):Symbol {
-            var obj:Symbol = verifyExpression(exp.base),
-                activation:Symbol,
-                withFrame:Symbol;
-            if (!obj) return undefined;
-
-            var filter:Symbol = obj.testFilterSupport();
-            if (filter || obj.valueType == semanticContext.statics.anyType) {
-                activation = semanticContext.factory.activation(semanticContext.statics.anyType);
-                withFrame = semanticContext.factory.withFrame(semanticContext.statics.anyType);
-
-                enterFunction(activation, null, null);
-                scopeChain.enterFrame(activation);
-                scopeChain.enterFrame(withFrame);
-                verifyExpression(exp.predicate);
-                scopeChain.exitFrame();
-                scopeChain.exitFrame();
-                exitFunction();
-
-                filter.activation = activation;
-                filter.withFrame = withFrame;
-            }
-            else reportVerifyError('verifyErrors.unsupportedFilterOperation', exp.span, { type: obj.valueType });
-
-            return filter;
         }
 
         private function verifyDescendantsOperator(exp:DescendantsNode):Symbol {

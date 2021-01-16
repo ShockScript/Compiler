@@ -374,8 +374,6 @@ package dsc.parsing {
             if (consume(Token.DOT)) {
                 if (node2 = parseOptQualifiedIdentifier()) node = new DotNode(base, QualifiedIdNode(node2)), markLocation(base.span), node.span = popLocation();
 
-                else if (token.type == Token.LPAREN && includeNonTypePostfixOperators) node = parseFilterOperator(base);
-
                 else if (token.type == Token.LT) {
                     openLeftAngle('syntaxErrors.words.argumentList');
                     var arrowArguments:Array = [];
@@ -404,31 +402,6 @@ package dsc.parsing {
             }
 
             return node;
-        }
-
-        private function parseFilterOperator(base:ExpressionNode):ExpressionNode {
-            markLocation(base.span);
-            functionFlagsStack.push(functionFlags == -1 ? -1 : 0);
-            var filter:ExpressionNode = parseParenListExpression();
-            var flags:uint = functionFlagsStack.pop();
-
-            if (token.type == Token.COLON_COLON) {
-                var id:ExpressionNode = parseQualifiedIdentifierFinal(filter);
-                base = new DotNode(base, QualifiedIdNode(id));
-
-                if (flags != -1) this.functionFlags |= flags;
-            }
-            else {
-                base = new FilterNode(base, filter);
-
-                // forbid yield/await
-
-                if (flags != -1 && (flags & FunctionFlags.YIELD)) duplicateLocation(), reportSyntaxError('syntaxErrors.filterOperatorMustNotContainYield', getTokenLocation());
-
-                if (flags != -1 && (flags & FunctionFlags.AWAIT)) duplicateLocation(), reportSyntaxError('syntaxErrors.filterOperatorMustNotContainAwait', getTokenLocation());
-            }
-
-            return base.span = popLocation(), base;
         }
 
         private function parseOptPrimaryExpression():ExpressionNode {

@@ -5,7 +5,7 @@
 _CURRENT GOALS:_
 
 - [ ] WebAssembly target
-- [ ] Global Objects
+- [ ] Full Global Object definitions
 - [ ] Object Reference Generator
 - [ ] Runtime
 

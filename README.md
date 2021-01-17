@@ -15,7 +15,8 @@ Basic requirements:
 - [Node.js](https://nodejs.org)
 
 Backend requirements:
-- JRE or JDK
+- JRE or JDK 8 ([jdk.java.net](https://jdk.java.net))
+- Terminal environment variable `JAVA_HOME` must point to JRE or JDK 8 installation.
 - [Adobe AIR SDK](http://airsdk.harman.com/download)
 - `asconfigc` tool, which may be installed with the command `npm install asconfigc -g`
 

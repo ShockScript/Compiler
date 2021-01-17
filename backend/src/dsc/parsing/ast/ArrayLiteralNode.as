@@ -2,7 +2,8 @@ package dsc.parsing.ast {
     import dsc.semantics.*;
 
     /**
-     * Array literal. May be used to initialize Array, tuple and flags <code>enum</code>.
+     * Array literal. May be used to initialize *, Array, tuple or flag enumeration, be it nullable or not.
+     * The returned value is of non-nullable type.
      */
     public final class ArrayLiteralNode extends ExpressionNode {
         public var elements:Array;

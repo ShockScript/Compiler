@@ -135,6 +135,13 @@ package dsc.parsing {
             return r;
         }
 
+        public function expectIdentifierOrKeyword():String {
+            var r:String = token.string;
+            if (!consume(Token.IDENTIFIER) && !token.type.isKeyword)
+                expectIdentifier();
+            return r;
+        }
+
         public function expectContextKeyword(keyword:String):Problem {
             if (token.type == Token.IDENTIFIER && token.string == keyword) return shiftToken(), null;
 
@@ -1472,12 +1479,12 @@ package dsc.parsing {
 
         private function parseImportDirective():DirectiveNode {
             markLocation(), shiftToken(), markLocation();
-            var str:String = expectIdentifier(),
+            var str:String = expectIdentifierOrKeyword(),
                 alias:String,
                 aliasSpan:Span,
                 importName:Array = [];
 
-            if (token.type == Token.ASSIGN) alias = str, aliasSpan = popLocation(), shiftToken(), markLocation(), importName.push(expectIdentifier());
+            if (token.type == Token.ASSIGN) alias = str, aliasSpan = popLocation(), shiftToken(), markLocation(), importName.push(expectIdentifierOrKeyword());
 
             else { importName.push(str); if (token.type != Token.DOT) expect(Token.DOT) }
 
@@ -1486,7 +1493,7 @@ package dsc.parsing {
             while (consume(Token.DOT)) {
                 if (consume(Token.TIMES)) { wildcard = true; break }
 
-                importName.push(expectIdentifier());
+                importName.push(expectIdentifierOrKeyword());
             }
 
             parseSemicolon();
@@ -1496,9 +1503,9 @@ package dsc.parsing {
 
         private function parsePackageDefinition():PackageDefinitionNode {
             markLocation(), shiftToken();
-            var id:String = consumeIdentifier() || '';
+            var id:String = expectIdentifierOrKeyword() || '';
 
-            while (consume(Token.DOT)) id += '.' + expectIdentifier();
+            while (consume(Token.DOT)) id += '.' + expectIdentifierOrKeyword();
 
             var blockContext:ParserContext = new ParserContext;
             blockContext.atPackageFrame = true;

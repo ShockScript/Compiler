@@ -166,11 +166,6 @@
   - [x] XMLListNode
   - [x] XMLNode
 
-### Available proxy methods
-
-- `proxy::apply(arguments:Array):*`: may be a type static method or an instance method.
-- More to be listed here.
-
 ### DSDoc work
 
 - Pages

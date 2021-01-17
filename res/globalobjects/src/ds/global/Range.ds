@@ -28,7 +28,7 @@ package ds.global {
             if (start is String) {
                 var split = String(start).split('-');
                 start = split[0].charCodeAt(0);
-                end = split[1].charCodeAt(0);
+                end = split[1].charCodeAt(0) + 1;
                 step = 1;
             }
             return new Range(start, end, step);

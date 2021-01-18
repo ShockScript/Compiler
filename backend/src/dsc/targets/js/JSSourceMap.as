@@ -1,5 +1,5 @@
-package dsc.targets.wasm {
-    public final class WASMSourceMap {
+package dsc.targets.js {
+    public final class JSSourceMap {
         private static const chars:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
         private static function encodeInteger(num:Number):String {

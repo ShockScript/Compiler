@@ -20,12 +20,12 @@ package dsc {
         private var _valid:Boolean = true;
 
         private var _skipLength:uint;
-        private var _stdLibLength:uint;
+        private var _globalObjectProgramsLength:uint;
 
         public function Compiler(options:*, currentDirectory:File) {
             verifier = new Verifier(options.config ? _loadConfigFile(currentDirectory.resolvePath(options.config)) : null);
 
-            compileStandardLibrary();
+            compileGlobalObjects();
 
             var sourcePath:String;
 
@@ -54,14 +54,14 @@ package dsc {
             _excludeSources(file, sourceFiles);
         }
 
-        public function compileStandardLibrary():void {
+        public function compileGlobalObjects():void {
             var k:CompilerOptions = verifier.compilerOptions;
             verifier.compilerOptions = _loadConfigFile(File.applicationDirectory.resolvePath('res/globalobjects/dovescript.json'));
             addSources(File.applicationDirectory.resolvePath('res/globalobjects'));
             parse();
             if (valid)
                 verify();
-            _stdLibLength = latestIncludedPrograms.length;
+            _globalObjectProgramsLength = latestIncludedPrograms.length;
             skipProgramsLength(latestIncludedPrograms.length);
             verifier.compilerOptions = k;
         }
@@ -98,12 +98,12 @@ package dsc {
             return _valid;
         }
 
-        public function get onlyStdLibIncluded():Boolean {
-            return programs.length == _stdLibLength;
+        public function get onlyGlobalObjectsIncluded():Boolean {
+            return programs.length == _globalObjectProgramsLength;
         }
 
-        public function get stdLibPrograms():Array {
-            return programs.slice(0, _stdLibLength);
+        public function get globalObjectPrograms():Array {
+            return programs.slice(0, _globalObjectProgramsLength);
         }
 
         public function get latestIncludedPrograms():Array {

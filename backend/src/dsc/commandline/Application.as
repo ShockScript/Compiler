@@ -14,7 +14,7 @@ package dsc.commandline {
     import dsc.parsing.*;
     import dsc.parsing.ast.*;
     import dsc.verification.*;
-    // import dsc.targets.wasm.*;
+    // import dsc.targets.js.*;
     // import dsdoc.*;
 
     public class Application extends Sprite {

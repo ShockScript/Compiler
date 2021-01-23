@@ -7,8 +7,6 @@ package ds.global {
             const RTL;
         }
 
-        // Begin Intl.Locale
-
         final class Locale {
             static private var constructorOn = true;
             static private const valueMap = new Map;
@@ -195,9 +193,9 @@ package ds.global {
                 valueMap.set(languageCode, this);
             }
 
-            static Proxy function apply([lang]:Array):?Intl.Locale {
+            static Proxy function apply([lang]:Array) : ?Intl.Locale {
                 if (lang is Intl.Locale) return lang;
-                return valueMap.get(formatTag(Intl.Locale(lang).toString())) || null;
+                return valueMap.get(formatTag(String(lang))) || null;
             }
 
             private static native function formatTag(code:String):String;
@@ -208,11 +206,8 @@ package ds.global {
             function get region():?Intl.Region regionCode ? Intl.Region(regionCode) : null;
 
             override function toString():String languageCode;
-        }
 
-        // End Intl.Locale
-
-        // Begin Intl.Region
+        } // Intl.Locale
 
         final class Region {
             const regionCode:String;
@@ -493,8 +488,7 @@ package ds.global {
             native function getName(language:Intl.Locale):String;
 
             override function toString():String regionCode;
-        }
 
-        // End Intl.Region
+        } // Intl.Region
     }
 }

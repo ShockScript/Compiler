@@ -158,7 +158,15 @@ package dsc.parsing {
                 reportSyntaxError('syntaxErrors.unexpectedBefore', getTokenLocation(), { what: new ProblemWord('syntaxErrors.words.lineBreak'), before: token.type });
         }
 
-        public function parseTypeExpression():ExpressionNode { return parseNonPostfixExpression() }
+        public function parseTypeExpression():ExpressionNode {
+            var exp:ExpressionNode = parseNonPostfixExpression();
+            if (consume(Token.QUESTION_MARK)) {
+                markLocation(exp.span);
+                exp = new NullableTypeNode(exp);
+                exp.span = popLocation();
+            }
+            return exp;
+        }
 
         public function parseTypeExpressionList():ExpressionNode {
             markLocation();
@@ -335,7 +343,7 @@ package dsc.parsing {
                 else if ((token.type == Token.AS || token.type == Token.IS || token.type == Token.INSTANCEOF) && minPrecedence.valueOf() <= OperatorPrecedence.RELATIONAL_OPERATOR.valueOf()) {
                     var typeOp:String = token.type == Token.AS ? 'as' : token.type == Token.IS ? 'is' : 'instanceof';
                     shiftToken();
-                    node = new TypeOperatorNode(typeOp, node, parseTypeExpression()), markLocation(base.span), node.span = popLocation();
+                    node = new TypeOperatorNode(typeOp, node, parseExpression(false, OperatorPrecedence.POSTFIX_OPERATOR)), markLocation(base.span), node.span = popLocation();
                 }
                 else if (filterBinaryOperator(token.type) && minPrecedence.valueOf() <= nextPrecedence.valueOf())
                     shiftToken(),
@@ -343,20 +351,15 @@ package dsc.parsing {
                 else if (minPrecedence.valueOf() <= OperatorPrecedence.RELATIONAL_OPERATOR.valueOf() && allowIn && consume(Token.IN)) node = new BinaryOperatorNode(Operator.IN, node, parseExpression(allowIn, OperatorPrecedence.SHIFT_OPERATOR)), markLocation(base.span), node.span = popLocation();
 
                 else if (minPrecedence.valueOf() <= OperatorPrecedence.TERNARY_OPERATOR.valueOf() && consume(Token.QUESTION_MARK)) {
-                    if (token.type == Token.SEMICOLON || token.type == Token.RBRACE || token.type == Token.EQUALS || token.type == Token.DOT || script.getLineIndent(base.span.firstLine) >= script.getLineIndent(token.firstLine))
-                        markLocation(base.span),
-                        node = new NullableTypeNode(node), node.span = popLocation();
-                    else {
-                        // ConditionalExpression
-                        node2 = parseExpression(allowIn, OperatorPrecedence.ASSIGNMENT_OPERATOR, includeAssignment);
-                        var node3:ExpressionNode;
+                    // ConditionalExpression
+                    node2 = parseExpression(allowIn, OperatorPrecedence.ASSIGNMENT_OPERATOR, includeAssignment);
+                    var node3:ExpressionNode;
 
-                        if (consume(Token.COLON)) node3 = parseExpression(allowIn, OperatorPrecedence.TERNARY_OPERATOR, includeAssignment);
+                    if (consume(Token.COLON)) node3 = parseExpression(allowIn, OperatorPrecedence.TERNARY_OPERATOR, includeAssignment);
 
-                        else throw expect(Token.COLON);
+                    else throw expect(Token.COLON);
 
-                        node = new TernaryNode(node, node2, node3), markLocation(base.span), node.span = popLocation();
-                    }
+                    node = new TernaryNode(node, node2, node3), markLocation(base.span), node.span = popLocation();
                 }
                 else if (token.type.isAssignment && minPrecedence.valueOf() <= OperatorPrecedence.ASSIGNMENT_OPERATOR.valueOf() && includeAssignment) {
                     var compoundOperator:Operator = token.type.getCompoundAssignmentOperator();

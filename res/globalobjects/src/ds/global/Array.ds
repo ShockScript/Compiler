@@ -18,17 +18,15 @@ package ds.global {
         function get isEmpty():Boolean
             length == 0;
 
-        function get firstElement():*
-            isEmpty ? undefined : this[0];
+        function get firstElement():* this[0];
 
         function set firstElement(value:*):void {
             this[0] = value;
         }
 
-        function get lastElement():*
-            isEmpty ? undefined : this[length - 1];
+        function get lastElement():* isEmpty ? undefined : this[length - 1];
 
-        function set lastElement(value:*):void {
+        function set lastElement(value) {
             this[isEmpty ? 0 : length - 1] = value;
         }
 

@@ -47,7 +47,7 @@ package dsc.semantics.types {
         }
 
         override public function toString():String {
-            return '?' + wrapsType.toString();
+            return wrapsType.toString() + '?';
         }
     }
 }

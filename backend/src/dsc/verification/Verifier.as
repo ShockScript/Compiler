@@ -1433,7 +1433,7 @@ package dsc.verification {
                 else {
                     var isPrimitive:Boolean = (configMetadata && configMetadata &&configMetadata.findEntry('primitive') && !!(configMetadata.findEntry('primitive').value)) || definition.removeMetaData('Primitive');
                     var isUnion:Boolean = (configMetadata && configMetadata.findEntry('union') && !!(configMetadata.findEntry('union').value)) || definition.removeMetaData('Union');
-                    type = semanticContext.factory.classType(name, (definition.modifiers & Modifiers.FINAL ? ClassFlags.FINAL : 0) | (definition.modifiers & Modifiers.DYNAMIC ? ClassFlags.DYNAMIC : 0) | (isPrimitive ? ClassFlags.PRIMITIVE : 0) | (isUnion ? ClassFlags.UNION : 0));
+                    type = semanticContext.factory.classType(name, (definition.modifiers & Modifiers.FINAL ? ClassFlags.FINAL : 0) | (definition.modifiers & Modifiers.DYNAMIC ? ClassFlags.DYNAMIC : 0) | (isPrimitive ? ClassFlags.PRIMITIVE : 0) | (isUnion ? ClassFlags.UNION : 0) | (isUnion ? ClassFlags.ALLOW_LITERAL : 0));
                     updateDefinitionOrigin(type);
                     intoNames.defineName(name, type);
                 }
@@ -1442,10 +1442,10 @@ package dsc.verification {
                 definition.removeMetaData('TypeConfig');
 
                 if (type && configMetadata && configMetadata.findEntry('dynamicInit'))
-                    type.classFlags |= configMetadata.findEntry('dynamicInit').value ? ClassFlags.DYNAMIC_INIT : 0;
+                    type.classFlags |= configMetadata.findEntry('dynamicInit').value ? ClassFlags.ALLOW_LITERAL : 0;
 
-                if (type && definition.removeMetaData('FieldInit'))
-                    type.classFlags |= ClassFlags.DYNAMIC_INIT;
+                if (type && definition.removeMetaData('AllowLiteral'))
+                    type.classFlags |= ClassFlags.ALLOW_LITERAL;
 
                 if (type)
                     result.setSymbolOf(definition.block, frame = semanticContext.factory.classFrame(type)),
@@ -1534,19 +1534,6 @@ package dsc.verification {
 
                 scopeChain.exitFrame();
 
-                if (type.classFlags & ClassFlags.UNION) {
-                    for each (drtv in definition.block.directives) {
-                        var varDefn:VarDefinitionNode = drtv as VarDefinitionNode;
-                        if (varDefn) {
-                            for each (var binding:VarBindingNode in varDefn.bindings) {
-                                var varType:Symbol = result.symbolOf(binding.pattern).valueType;
-                                if (!varType.containsNull || !varType.containsUndefined)
-                                    reportVerifyError('verifyErrors.unionInstanceVarMustBeNullable', binding.pattern.span);
-                            }
-                        }
-                    }
-                }
-
                 break;
 
             case VerificationPhase.INTERFACE_OPERATORS:
@@ -1566,6 +1553,19 @@ package dsc.verification {
                 scopeChain.enterFrame(result.symbolOf(definition.block));
                 verifyDirectives(definition.block.directives, VerificationContext.withPhase(VerificationPhase.OMEGA));
                 scopeChain.exitFrame();
+
+                if (type.classFlags & ClassFlags.UNION) {
+                    for each (drtv in definition.block.directives) {
+                        var varDefn:VarDefinitionNode = drtv as VarDefinitionNode;
+                        if (varDefn && !(varDefn.modifiers & Modifiers.STATIC)) {
+                            for each (var binding:VarBindingNode in varDefn.bindings) {
+                                var varType:Symbol = result.symbolOf(binding.pattern).target.valueType;
+                                if (!varType.containsNull || !varType.containsUndefined)
+                                    reportVerifyError('verifyErrors.unionInstanceVarMustBeNullable', binding.pattern.span);
+                            }
+                        }
+                    }
+                }
 
                 break;
             }
@@ -1916,7 +1916,7 @@ package dsc.verification {
         }
 
         private function verifyObjectLiteral(literal:ObjectLiteralNode, context:VerificationContext):Symbol {
-            var initType:Symbol = context.expectedType && context.expectedType.escapeType() is ClassType && context.expectedType.escapeType().classFlags & ClassFlags.DYNAMIC_INIT ? context.expectedType.escapeType() : undefined,
+            var initType:Symbol = context.expectedType && context.expectedType.escapeType() is ClassType && context.expectedType.escapeType().classFlags & ClassFlags.ALLOW_LITERAL ? context.expectedType.escapeType() : undefined,
                 fieldOrSpreadOp:Node,
                 field:ObjectFieldNode,
                 spreadOp:SpreadOperatorNode,

@@ -46,7 +46,7 @@ package ds.global {
         native Proxy function deleteProperty(name:*):Boolean;
     }
 
-    [FieldInit]
+    [AllowLiteral]
     final class XMLSettings {
         var ignoreComments = true;
         var ignoreProcessingInstructions = true;

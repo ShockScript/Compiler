@@ -226,6 +226,15 @@ package dsc.semantics {
             return r;
         }
 
+        public function superClassStaticReferenceValue(subclass:Symbol, superClass:Symbol, property:Symbol):Symbol {
+            if (!(property is Slot))
+                return property;
+            var r:Symbol = new SuperClassStaticReferenceValue(subclass, superClass, property);
+            r.valueType = property.valueType;
+            r._context = _context;
+            return r;
+        }
+
         public function dynamicReferenceValue(object:Symbol):Symbol {
             var r:Symbol = new DynamicReferenceValue(object);
             r.valueType = _context.statics.anyType;

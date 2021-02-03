@@ -41,12 +41,16 @@ package dsc.semantics.types {
 
         override public function resolveName(name:Symbol):Symbol {
             var r:Symbol = this.names.resolveName(name);
-            return r ? ownerContext.factory.referenceValue(this, r) : null;
+            if (r) return ownerContext.factory.referenceValue(this, r);
+            r = superType ? superType.resolveName(name) : null;
+            return r is SuperClassStaticReferenceValue ? ownerContext.factory.superClassStaticReferenceValue(this, r.superType, r.property) : r ? ownerContext.factory.superClassStaticReferenceValue(this, superType, r.property) : null;
         }
 
         override public function resolveMultiName(nss:NamespaceSet, name:String):Symbol {
             var r:Symbol = this.names.resolveMultiName(nss, name);
-            return r ? ownerContext.factory.referenceValue(this, r) : null;
+            if (r) return ownerContext.factory.referenceValue(this, r);
+            r = superType ? superType.resolveMultiName(nss, name) : null;
+            return r is SuperClassStaticReferenceValue ? ownerContext.factory.superClassStaticReferenceValue(this, r.superType, r.property) : r ? ownerContext.factory.superClassStaticReferenceValue(this, superType, r.property) : null;
         }
     }
 }

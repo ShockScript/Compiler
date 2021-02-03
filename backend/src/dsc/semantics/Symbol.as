@@ -398,6 +398,10 @@ package dsc.semantics {
             return null;
         }
 
+        public function get subclass():Symbol {
+            return null;
+        }
+
         public function get subclasses():Array {
             return null;
         }

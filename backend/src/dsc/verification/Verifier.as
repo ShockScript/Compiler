@@ -1872,7 +1872,7 @@ package dsc.verification {
             if (base && base is Type) {
                 // C.Proxy::apply()
                 applyFn = base.resolveName(semanticContext.statics.proxyApply);
-                applyFn = applyFn is ReferenceValue ? applyFn.property : null;
+                applyFn = applyFn is ReferenceValue || applyFn is SuperClassStaticReferenceValue ? applyFn.property : null;
                 if (applyFn is MethodSlot && applyFn.methodSignature.isApplyProxy(semanticContext)) {
                     for each (subExp in expression.arguments)
                         verifyExpression(subExp);

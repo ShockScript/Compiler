@@ -138,22 +138,20 @@ package ds.global {
 
         function reduce(fn:Function, initialValue:* = 0):* {
             var v = initialValue;
-            for each (var index:Number in Range(0, length))
+            for (var index = 0; index < length; ++index)
                 v = fn(v, this[i], i, this);
             return v;
         }
 
         function reduceRight(fn:Function, initialValue:* = 0):* {
             var v = initialValue;
-            for each (var index:Number in Range(length - 1, -1))
-                v = fn(v, this[i], i, this);
+            for (var index = length; --index != -1;) v = fn(v, this[index], i, this);
             return v;
         }
 
         function reverse():Array {
             var r = [];
-            for each (var index:Number in Range(length - 1, -1))
-                r.push(this[index]);
+            for each (var index:Number in Range(length - 1, -1)) r.push(this[index]);
             return r;
         }
 
@@ -196,7 +194,7 @@ package ds.global {
         native function unshift(...arguments):Number;
     }
 
-    [TypeConfig(flags=true)]
+    [Flags]
     enum SortOptions {
         const CASE_INSENSITIVE;
         const DESCENDING;

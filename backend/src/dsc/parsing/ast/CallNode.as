@@ -7,7 +7,7 @@ package dsc.parsing.ast {
      * 
      * <p><i>Special semantics</i>: if <code>base</code> is a type with a static <code>Proxy::apply()</code> method,
      * then the result is a call to this method, overriding any default DoveScript type conversion.
-     * The <code>Proxy::apply()</code> method may be a super method in <code>static</code> context.</p>
+     * The <code>Proxy::apply()</code> method is not supported to be a super method in <code>static</code> context.</p>
      */
     public final class CallNode extends ExpressionNode {
 

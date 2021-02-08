@@ -93,7 +93,7 @@ package dsc.semantics {
             voidType = _factory.voidType();
             nullType = _factory.nullType();
             objectType = _defineClass(dsGlobalPackage, 'Object', ClassFlags.DYNAMIC);
-            classType = _defineClass(dsGlobalPackage, 'Class', ClassFlags.FINAL);
+            classType = _defineClass(dsGlobalPackage, 'Class', ClassFlags.FINAL | ClassFlags.DYNAMIC);
             anyType.valueType =
             voidType.valueType =
             nullType.valueType =

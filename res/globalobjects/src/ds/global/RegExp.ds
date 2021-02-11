@@ -4,7 +4,7 @@ package ds.global {
         var lastIndex:Number;
         private var _flags:Flags;
 
-        native function RegExp(pattern:String, flags:String = '', references:?Dictionary = null);
+        native function RegExp(pattern:String, flags:String = '', references:Map? = null);
 
         function get global():Boolean 'global' in _flags;
         function get multiline():Boolean 'multiline' in _flags;

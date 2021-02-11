@@ -15,6 +15,9 @@ package ds.global {
 
         Proxy function add(arg:Array):Array concat(arg);
 
+        Proxy function hasProperty(value:*):Boolean
+            indexOf(value) != -1;
+
         function get isEmpty():Boolean
             length == 0;
 
@@ -35,6 +38,9 @@ package ds.global {
 
         Proxy function nextValue(index:Number):*
             this[index - 1];
+
+        function includes(value:*):Boolean
+            indexOf(value) != -1;
 
         function concat(...arrays):Array {
             var r = [];

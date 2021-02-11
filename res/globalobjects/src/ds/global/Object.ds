@@ -1,5 +1,8 @@
 package ds.global {
     dynamic class Object {
+        function Object() {
+        }
+
         static function assign(target:Object, ...objects):void {
             for each (var obj in objects)
                 if (obj)

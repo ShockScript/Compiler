@@ -1957,7 +1957,7 @@ package dsc.verification {
                 }
             }
             else {
-                dictType = context.expectedType == semanticContext.statics.dictionaryType ? semanticContext.statics.dictionaryType : semanticContext.statics.objectType;
+                dictType = context.expectedType == semanticContext.statics.mapType ? semanticContext.statics.mapType : semanticContext.statics.objectType;
                 for each (fieldOrSpreadOp in literal.fields) {
                     if (fieldOrSpreadOp is SpreadOperatorNode) {
                         spreadOp = SpreadOperatorNode(fieldOrSpreadOp);
@@ -2147,9 +2147,11 @@ package dsc.verification {
                 argument:Symbol;
 
             if (exp.type == Operator.AWAIT) {
-                var promiseType:Symbol = _openedFunction.methodSlot ? _openedFunction.methodSlot.methodSignature.result : semanticContext.statics.promiseAnyType;
-                limitType(exp.argument, promiseType);
-                r = semanticContext.factory.value(promiseType.arguments[0]);
+                var awaitOperand:Symbol = verifyExpression(exp.argument);
+                var promiseType:Symbol = awaitOperand.valueType.equalsOrInstantiationOf(semanticContext.statics.promiseType) ? awaitOperand.valueType : null;
+                if (!promiseType && awaitOperand.valueType != semanticContext.statics.anyType && awaitOperand.valueType != semanticContext.statics.objectType)
+                    reportVerifyError('verifyErrors.expectedPromise', exp.span);
+                r = semanticContext.factory.value(promiseType ? promiseType.arguments[0] : awaitOperand.valueType);
             }
             else if (exp.type == Operator.YIELD)
                 verifyExpression(exp.argument),
@@ -2401,7 +2403,7 @@ package dsc.verification {
                 if (tupleType) {
                     var index:uint;
 
-                    if (arrayLiteral.elements.length != tupleType.tupleElements.length)
+                    if (arrayLiteral.elements.length > tupleType.tupleElements.length)
                         reportVerifyError('verifyErrors.wrongNumberOfTupleElements', exp.span, { number: tupleType.tupleElements.length });
 
                     for each (subExp in arrayLiteral.elements) {
@@ -2832,7 +2834,7 @@ package dsc.verification {
                 if (tupleType) {
                     var index:uint;
 
-                    if (arrayLiteral.elements.length != tupleType.tupleElements.length)
+                    if (arrayLiteral.elements.length > tupleType.tupleElements.length)
                         reportVerifyError('verifyErrors.wrongNumberOfTupleElements', exp.span, { number: tupleType.tupleElements.length });
 
                     for each (subExp in arrayLiteral.elements) {

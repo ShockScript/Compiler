@@ -69,5 +69,6 @@
 	"untypedSwitchTypeCase": "Case must have type declaration.",
 	"typeNotFound": "Type not found or was not a compile-time constant.",
 	"typeIsNotParameterized": "Type is not parameterized and does not require arguments.",
-	"returnStatementMustReturnValue": "Return statement must return value."
+	"returnStatementMustReturnValue": "Return statement must return value.",
+	"expectedPromise": "Expected Promise here."
 }

@@ -20,9 +20,10 @@
 - [x] Infinity
 - [ ] Intl
   - [x] Intl.Region
-  - [x] Intl.Language
-  - [x] Intl.LanguageReadType
-  - [ ] Intl.LanguageMap
+  - [x] Intl.Locale
+  - [x] Intl.LocaleDirection
+  - [ ] Intl.LocaleMap
+    - [ ] get()
 - [x] JSON
 - [x] Observable
 - [x] Map

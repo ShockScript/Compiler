@@ -492,7 +492,11 @@ package dsc.parsing {
             var r:Array = [];
             openParen('syntaxErrors.words.argumentList');
 
-            if (token.type != Token.RPAREN) do r.push(parseExpression(true, OperatorPrecedence.ASSIGNMENT_OPERATOR)); while(consume(Token.COMMA));
+            do {
+                if (token.type == Token.RPAREN)
+                    break;
+                r.push(parseExpression(true, OperatorPrecedence.ASSIGNMENT_OPERATOR));
+            } while(consume(Token.COMMA));
 
             closeParen();
             return r;

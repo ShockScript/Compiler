@@ -2,11 +2,6 @@ package ds.global {
     import ds.internals.InternalErrors;
 
     final class Intl {
-        enum LocaleDirection {
-            const LTR;
-            const RTL;
-        }
-
         final class Locale {
             static private var constructorOn = true;
             static private const valueMap = new Map;
@@ -14,12 +9,12 @@ package ds.global {
             /**
              * BCP 47 language code.
              */
-            const languageCode:String;
+            private const languageCode:String;
 
             /**
              * ISO 3166 3-letter country code.
              */
-            const regionCode:String;
+            private const regionCode:String;
 
             new Locale('en-US', 'USA'),
             new Locale('af'),
@@ -193,8 +188,9 @@ package ds.global {
                 valueMap.set(languageCode, this);
             }
 
-            static Proxy function apply([lang]:Array) : ?Intl.Locale {
-                if (lang is Intl.Locale) return lang;
+            static Proxy function apply([lang]:Array):Intl.Locale? {
+                if (lang is Intl.Locale)
+                    return lang;
                 return valueMap.get(formatTag(String(lang))) || null;
             }
 
@@ -203,14 +199,21 @@ package ds.global {
             native function get name():String;
             native function get direction():Intl.LocaleDirection;
 
-            function get region():?Intl.Region regionCode ? Intl.Region(regionCode) : null;
+            function get region():Intl.Region?
+                regionCode ? Intl.Region(regionCode) : null;
 
-            override function toString():String languageCode;
+            override function toString():String
+                languageCode;
 
         } // Intl.Locale
 
+        enum LocaleDirection {
+            const LTR;
+            const RTL;
+        }
+
         final class Region {
-            const regionCode:String;
+            private const regionCode:String;
 
             static private var constructorOn = true;
             static private const valueMap = new Map;
@@ -479,7 +482,7 @@ package ds.global {
 
             private static native function getCountryISO3(code:String):String;
 
-            Proxy static function apply([code]:Array):?Intl.Region {
+            Proxy static function apply([code]:Array):Intl.Region? {
                 code = String(code).toUpperCase();
                 code = code.length == 2 ? getCountryISO3(code) : code;
                 return valueMap.get(code) || null;
@@ -490,5 +493,126 @@ package ds.global {
             override function toString():String regionCode;
 
         } // Intl.Region
+
+        final class LocaleMap {
+            private var _localePathComps:Map = new Map;
+            private var _locales:Array;
+            private var _currentLocale:Locale?;
+            private var _defaultLocale:Locale?;
+            private var _fallbacks:Map = new Map;
+            private var _assets:Map = new Map;
+            private var _assetsBaseNames:Array;
+            private var _assetsSrc:String;
+            private var _assetsLoader:Function?;
+            private var _cleanAssets:Boolean;
+
+            function LocaleMap(options:LocaleMapOptions) {
+                for each (var id in options.localeIds)
+                    _localePathComps.set(Locale(id), String(id));
+                _locales = options.localeIds.map(function(id) Locale(id));
+                _defaultLocale = options.defaultLocale;
+                var suppliedFallbacks = options.fallbacks || {};
+                for (var fromLang in suppliedFallbacks) {
+                    var rawList = suppliedFallbacks[fromLang];
+                    rawList = rawList is Array ? rawList : [rawList];
+                    var list = rawList.map(function(toLang) Locale(toLang));
+                    _fallbacks.set(Locale(fromLang), list);
+                }
+                _assetsBaseNames = options.assets.baseNames.slice();
+                _assetsSrc = String(options.assets.src);
+                _assetsLoader = options.assets.loader;
+                _cleanAssets = options.assets.clean;
+            }
+
+            function reflectOptions():LocaleMapOptions {
+                var r = new LocaleMapOptions;
+                for each (var [id] in _localePathComps)
+                    r.localeIds.push(id);
+                r.defaultLocale = _defaultLocale;
+                for each (var [fromLang, toList] in _fallbacks)
+                    r.fallbacks[String(fromLang)] = toList.slice();
+                r.assets.src = _assetsSrc;
+                r.assets.baseNames = _assetsBaseNames.slice();
+                r.assets.loader = _assetsLoader;
+                r.assets.clean = _cleanAssets;
+                return r;
+            }
+
+            function getCurrentLocale():Locale?
+                _currentLocale;
+
+            function setCurrentLocale(locale:Locale):Promise {
+                await load(locale);
+            }
+
+            function clone():LocaleMap {
+                var r = new LocaleMap(reflectOptions());
+                r._assets = _assets;
+                r._assetsLoader = null;
+                return r;
+            }
+
+            function load(locale:Locale? = null):Promise {
+                locale ||= _currentLocale || _defaultLocale;
+                if (!locale)
+                    ds.internals.InternalErrors.throwError('noDefaultLocale', Error);
+                if (!_locales.includes(locale))
+                    ds.internals.InternalErrors.throwError('unsupportedLocale', Error, { localeId: locale });
+
+                var toLoad = _enumFallbacksOf(locale);
+                toLoad.push(locale);
+
+                var newAssets = new Map;
+                for each (var locale in toLoad)
+                    newAssets.set(locale, await _loadSingleLocale(locale));
+
+                if (_cleanAssets)
+                    _assets.clear();
+
+                for each (var [locale, root] in newAssets)
+                    _assets.set(locale, root);
+            }
+
+            private function _enumFallbacksOf(locale:Locale, output:Array? = null):Array {
+                output ||= [];
+                for each (var list in _fallbacks.get(locale)) {
+                    for each (var item in list) {
+                        if (!(item in output)) output.push(item);
+                    }
+                    _enumFallbacksOf(list, output);
+                }
+                return output;
+            }
+
+            private function _loadSingleLocale(locale:Locale):Promise.<Map> {
+                if (!_assetsLoader)
+                    return new Map;
+                var loaderOrMap = _assetsLoader(this, locale);
+                if (loaderOrMap is Promise) {
+                    var r = await loaderOrMap;
+                    return r is Map ? r : new Map;
+                }
+                else return loaderOrMap is Map ? loaderOrMap : new Map;
+            }
+
+        } // Intl.LocaleMap
+
+        [AllowLiteral]
+        final class LocaleMapOptions {
+            var localeIds:Array = [];
+            var defaultLocale:Locale?;
+            var fallbacks:* = {};
+            var assets:LocaleMapAssetsOptions = {};
+
+        } // Intl.LocaleMapOptions
+
+        [AllowLiteral]
+        final class LocaleMapAssetsOptions {
+            var src:String = '';
+            var baseNames:Array = [];
+            var clean:Boolean = true;
+            var loader:Function?;
+
+        } // Intl.LocaleMapAssetsOptions
     }
 }

@@ -27,7 +27,7 @@ package dsc.semantics {
         public var nameTypes:Array;
         public var booleanType:Symbol;
         public var functionType:Symbol;
-        public var dictionaryType:Symbol;
+        public var mapType:Symbol;
         public var regExpType:Symbol;
         public var xmlType:Symbol;
         public var xmlListType:Symbol;
@@ -112,7 +112,7 @@ package dsc.semantics {
             charType = _defineClass(dsGlobalPackage, 'Char', ClassFlags.PRIMITIVE);
             numericTypes = [bigIntType, numberType, charType];
             integerTypes = [bigIntType, charType];
-            dictionaryType = _defineClass(dsGlobalPackage, 'Dictionary');
+            mapType = _defineClass(dsGlobalPackage, 'Map');
             regExpType = _defineClass(dsGlobalPackage, 'RegExp', ClassFlags.FINAL);
             xmlType = _defineClass(dsGlobalPackage, 'XML', ClassFlags.FINAL);
             xmlListType = _defineClass(dsGlobalPackage, 'XMLList', ClassFlags.FINAL);

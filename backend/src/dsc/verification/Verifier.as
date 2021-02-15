@@ -2799,7 +2799,7 @@ package dsc.verification {
                 }
                 else target.valueType = value.valueType;
 
-                target.valueType = context.turnObservables ? semanticContext.factory.instantiatedType(semanticContext.statics.observableType, [target.valueType]) : target.valueType
+                target.valueType = context.turnObservables ? semanticContext.factory.instantiatedType(semanticContext.statics.observableType, [target.valueType]) : target.valueType;
                 targetAndValue.value = value;
             }
             else if (objectLiteral = exp as ObjectLiteralNode) {

@@ -18,5 +18,9 @@ package dsc.semantics.constants {
 		override public function valueOf():* {
 			return this._value;
 		}
+
+		override public function toString():String {
+			return '[object EnumConstant]';
+		}
     }
 }

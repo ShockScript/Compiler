@@ -6,5 +6,9 @@ package dsc.semantics.constants {
     	 * @private
     	 */
     	public function UndefinedConstant() {}
+
+		override public function toString():String {
+			return '[object UndefinedConstant]';
+		}
     }
 }

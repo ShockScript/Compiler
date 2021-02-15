@@ -3,6 +3,7 @@ package dsc.semantics.values {
 	import dsc.semantics.constants.*;
 	import dsc.semantics.types.*;
 	import dsc.util.AnyRangeNumber;
+	import com.hurlant.math.BigInteger;
 
     public class Value extends Symbol {
     	private var _type:Symbol;
@@ -140,21 +141,47 @@ package dsc.semantics.values {
 			var fromType:Symbol = this.valueType;
 			if (fromType == toType) return this;
 
-			if ((toType == ownerContext.statics.anyType || toType.escapeType() == ownerContext.statics.objectType) && !(this is NamespaceConstant)) {
-				this.valueType = toType.escapeType();
-				return this;
+			if (this is NumberConstant) {
+				if (toType == ownerContext.statics.anyType || toType.escapeType() == ownerContext.statics.objectType)
+					return ownerContext.factory.numberConstant(this.valueOf(), toType);
+				if (ownerContext.isNumericType(toType.escapeType())) {
+					switch (toType.escapeType()) {
+						case ownerContext.statics.numberType: return ownerContext.factory.numberConstant(this.valueOf(), toType);
+						case ownerContext.statics.charType: return ownerContext.factory.charConstant(this.valueOf(), toType);
+						case ownerContext.statics.bigIntType: return ownerContext.factory.bigIntConstant(this.valueOf(), toType);
+					}
+				}
 			}
-			else if (this is NumberConstant && ownerContext.isNumericType(toType.escapeType())) {
-				switch (toType.escapeType()) {
-					case ownerContext.statics.numberType: return ownerContext.factory.numberConstant(this.valueOf());
-					case ownerContext.statics.charType: return ownerContext.factory.charConstant(this.valueOf());
-					case ownerContext.statics.bigIntType: return ownerContext.factory.bigIntConstant(this.valueOf());
+			else if (this is CharConstant) {
+				if (toType == ownerContext.statics.anyType || toType.escapeType() == ownerContext.statics.objectType)
+					return ownerContext.factory.charConstant(this.valueOf(), toType);
+				if (ownerContext.isNumericType(toType.escapeType())) {
+					switch (toType.escapeType()) {
+						case ownerContext.statics.numberType: return ownerContext.factory.numberConstant(this.valueOf(), toType);
+						case ownerContext.statics.charType: return ownerContext.factory.charConstant(this.valueOf(), toType);
+						case ownerContext.statics.bigIntType: return ownerContext.factory.bigIntConstant(new BigInteger(this.valueOf()), toType);
+					}
+				}
+			}
+			else if (this is BigIntConstant) {
+				if (toType == ownerContext.statics.anyType || toType.escapeType() == ownerContext.statics.objectType)
+					return ownerContext.factory.bigIntConstant(this.valueOf(), toType);
+				if (ownerContext.isNumericType(toType.escapeType())) {
+					switch (toType.escapeType()) {
+						case ownerContext.statics.numberType: return ownerContext.factory.numberConstant(this.valueOf().valueOf(), toType);
+						case ownerContext.statics.charType: return ownerContext.factory.charConstant(this.valueOf().valueOf() >= 0 && this.valueOf().valueOf() <= 0x10ffff ? this.valueOf().valueOf() : this.valueOf().valueOf() < 0 ? 0 : 0x10ffff, toType);
+						case ownerContext.statics.bigIntType: return ownerContext.factory.bigIntConstant(this.valueOf(), toType);
+					}
 				}
 			}
 			else if (this is StringConstant) {
 				if (toType.escapeType() == ownerContext.statics.charType)
-					return ownerContext.factory.charConstant(this.valueOf());
+					return ownerContext.factory.charConstant(this.valueOf().charCodeAt(0), toType);
+				if (toType == ownerContext.statics.anyType || toType.escapeType() == ownerContext.statics.objectType)
+					return ownerContext.factory.stringConstant(this.valueOf(), toType);
 			}
+			else if (this is BooleanConstant && (toType == ownerContext.statics.anyType || toType.escapeType() == ownerContext.statics.objectType))
+				return ownerContext.factory.booleanConstant(this.valueOf(), toType);
 			else if (this is UndefinedConstant) {
 				var defaultValue:Symbol = toType.defaultValue;
 				if (defaultValue) return defaultValue;

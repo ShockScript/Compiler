@@ -6,5 +6,9 @@ package dsc.semantics.constants {
     	 * @private
     	 */
     	public function NullConstant() {}
+
+		override public function toString():String {
+			return '[object NullConstant]';
+		}
     }
 }

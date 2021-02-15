@@ -286,14 +286,14 @@ package dsc.semantics {
 
         public function undefinedConstant(type:Symbol = null):Symbol {
             var r:Symbol = new UndefinedConstant;
-            r.valueType = type || _context.statics.anyType;
+            r.valueType = type || _context.statics.voidType;
             r._context = _context;
             return r;
         }
 
         public function nullConstant(type:Symbol = null):Symbol {
             var r:Symbol = new NullConstant;
-            r.valueType = type || _context.statics.anyType;
+            r.valueType = type || _context.statics.nullType;
             r._context = _context;
             return r;
         }

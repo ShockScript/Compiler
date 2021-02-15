@@ -2,7 +2,6 @@ package dsc.semantics {
     public final class VariableSlot extends Slot {
         private var _name:Symbol;
         private var _readOnly:Boolean;
-        private var _type:Symbol;
         private var _initialValue:Symbol;
         private var _enumPairAssociation:Array;
         private var _definedIn:Symbol;
@@ -13,7 +12,7 @@ package dsc.semantics {
         public function VariableSlot(name:Symbol, readOnly:Boolean, type:Symbol) {
             this._name = name;
             this._readOnly = readOnly;
-            this._type = type;
+            this.valueType = type;
         }
 
         override public function get name():Symbol {
@@ -30,14 +29,6 @@ package dsc.semantics {
 
         override public function get writeOnly():Boolean {
             return false;
-        }
-
-        override public function get valueType():Symbol {
-            return _type;
-        }
-
-        override public function set valueType(type:Symbol):void {
-            _type = type;
         }
 
         override public function get initialValue():Symbol {

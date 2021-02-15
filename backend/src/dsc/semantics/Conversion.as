@@ -38,9 +38,6 @@ package dsc.semantics {
         static public const SUB_INTERFACE:Conversion = new Conversion('subInterface');
         static public const FROM_NULLABLE:Conversion = new Conversion('fromNullable');
         static public const NULLABLE:Conversion = new Conversion('nullable');
-        static public const UNDEFINED_CONSTANT_INTO_NULLABLE:Conversion = new Conversion('undefinedConstantIntoNullable');
-        static public const NULL_CONSTANT_INTO_NULLABLE:Conversion = new Conversion('nullConstantIntoNullable');
-        static public const NULL_TO_COMPATIBLE:Conversion = new Conversion('nullToCompatible');
         static public const IMPLEMENTOR:Conversion = new Conversion('implementor');
 
         private var _name:String;

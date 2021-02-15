@@ -92,7 +92,6 @@ package dsc.semantics.values {
 			var ctx:Context = ownerContext;
 			var fromType:Symbol = this.valueType;
 			var subconversion:Symbol;
-
 			if (toType == fromType)
 				return this;
 			// Any
@@ -110,14 +109,10 @@ package dsc.semantics.values {
 					return ctx.factory.conversionValue(this, Conversion.SUPER_INTERFACE, toType, false);
 				else return ctx.factory.conversionValue(this, Conversion.IMPLEMENTED_INTERFACE, toType, false);
 			}
-			else if (this is NullConstant && toType.containsNull)
+			else if ((this is NullConstant || fromType is NullType) && toType.containsNull)
 				return ctx.factory.nullConstant(toType);
-			// null to nullable
-			else if (this is NullConstant && toType.containsNull)
-				return ctx.factory.conversionValue(this, Conversion.NULL_CONSTANT_INTO_NULLABLE, toType, false);
-			// undefined to nullable
-			else if (this is UndefinedConstant && toType.containsUndefined)
-				return ctx.factory.conversionValue(this, Conversion.UNDEFINED_CONSTANT_INTO_NULLABLE, toType, false);
+			else if ((this is UndefinedConstant || fromType is VoidType) && toType.containsUndefined)
+				return ctx.factory.undefinedConstant(toType);
 			// Nullable
 			else if (toType is NullableType) {
 				subconversion = this.convertImplicit(toType.wrapsType);
@@ -130,8 +125,6 @@ package dsc.semantics.values {
 				if (subconversion)
 					return ctx.factory.conversionValue(subconversion, Conversion.FROM_NULLABLE, toType, false);
 			}
-			else if (fromType is NullType && toType.containsNull)
-				return ctx.factory.conversionValue(this, Conversion.NULL_TO_COMPATIBLE, toType, false);
 
 			// From *
 			if (fromType == ctx.statics.anyType)

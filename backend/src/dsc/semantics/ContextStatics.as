@@ -158,7 +158,7 @@ package dsc.semantics {
             proxyRemainder = _factory.name(proxyNamespace, 'remainder');
 
             // "undefined" property
-            var undefinedVar:Symbol = _factory.variableSlot(_factory.name(dsGlobalPackage.publicNs, 'undefined'), true, anyType);
+            var undefinedVar:Symbol = _factory.variableSlot(_factory.name(dsGlobalPackage.publicNs, 'undefined'), true, voidType);
             undefinedVar.initialValue = _factory.undefinedConstant();
             dsGlobalPackage.names.defineName(undefinedVar.name, undefinedVar);
 
@@ -176,9 +176,7 @@ package dsc.semantics {
             dsGlobalPackage.names.defineName(_factory.name(dsGlobalPackage.publicNs, 'Proxy'), proxyNamespace);
 
             topPackage.valueType =
-
             dsGlobalPackage.valueType =
-
             dsOctetPackage.valueType = anyType;
 
             topPackage.publicNs.valueType =

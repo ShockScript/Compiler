@@ -571,6 +571,8 @@ package ds.global {
 
                 for each (var [locale, root] in newAssets)
                     _assets.set(locale, root);
+
+                _currentLocale = locale;
             }
 
             private function _enumFallbacksOf(locale:Locale, output:Array? = null):Array {
@@ -578,8 +580,8 @@ package ds.global {
                 for each (var list in _fallbacks.get(locale)) {
                     for each (var item in list) {
                         if (!(item in output)) output.push(item);
+                        _enumFallbacksOf(item, output);
                     }
-                    _enumFallbacksOf(list, output);
                 }
                 return output;
             }

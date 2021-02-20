@@ -538,12 +538,11 @@ package ds.global {
                 return r;
             }
 
-            function getCurrentLocale():Locale?
+            function get currentLocale():Locale?
                 _currentLocale;
 
-            function setCurrentLocale(locale:Locale):Promise {
+            function updateLocale(locale:Locale):Promise.<Boolean>
                 await load(locale);
-            }
 
             function clone():LocaleMap {
                 var r = new LocaleMap(reflectOptions());
@@ -552,7 +551,7 @@ package ds.global {
                 return r;
             }
 
-            function load(locale:Locale? = null):Promise {
+            function load(locale:Locale? = null):Promise.<Boolean> {
                 locale ||= _currentLocale || _defaultLocale;
                 if (!locale)
                     ds.internals.InternalErrors.throwError('noDefaultLocale', Error);
@@ -563,8 +562,12 @@ package ds.global {
                 toLoad.push(locale);
 
                 var newAssets = new Map;
-                for each (var locale in toLoad)
-                    newAssets.set(locale, await _loadSingleLocale(locale));
+                for each (var locale in toLoad) {
+                    var res = await _loadSingleLocale(locale);
+                    if (!res)
+                        return false;
+                    newAssets.set(locale, res);
+                }
 
                 if (_cleanAssets)
                     _assets.clear();
@@ -573,6 +576,7 @@ package ds.global {
                     _assets.set(locale, root);
 
                 _currentLocale = locale;
+                return true;
             }
 
             private function _enumFallbacksOf(locale:Locale, output:Array? = null):Array {
@@ -586,15 +590,15 @@ package ds.global {
                 return output;
             }
 
-            private function _loadSingleLocale(locale:Locale):Promise.<Map> {
+            private function _loadSingleLocale(locale:Locale):Promise.<Map?> {
                 if (!_assetsLoader)
-                    return new Map;
+                    return null;
                 var loaderOrMap = _assetsLoader(this, locale);
                 if (loaderOrMap is Promise) {
                     var r = await loaderOrMap;
-                    return r is Map ? r : new Map;
+                    return r is Map ? r : null;
                 }
-                else return loaderOrMap is Map ? loaderOrMap : new Map;
+                else return loaderOrMap is Map ? loaderOrMap : null;
             }
 
         } // Intl.LocaleMap
